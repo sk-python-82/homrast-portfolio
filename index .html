@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hom Rast — Portfolio</title>
+  <meta name="description" content="Everyday beauty, captured." />
+  <meta property="og:title" content="Hom Rast — Portfolio" />
+  <meta property="og:description" content="Everyday beauty, captured." />
+  <meta property="og:type" content="website" />
+  <style>
+    /* ——— Edge squiggle accents ——— */
+.edge-decor{position:fixed; inset:0; pointer-events:none; z-index:0;}
+.edge-decor svg{
+  position:absolute; width:min(22vmax,300px); height:auto;
+  color:var(--accent-1); opacity:.35;
+  filter:blur(.2px) drop-shadow(0 6px 14px rgba(0,0,0,.25));
+}
+.edge-decor .left{left:-8px; top:22vh; animation:floatL 13s var(--ease) infinite alternate;}
+.edge-decor .right{right:-8px; top:26vh; transform:scaleX(-1); animation:floatR 15s var(--ease) infinite alternate;}
+.edge-decor .smile{left:2vw; top:2.5vh; width:min(16vmax,180px); opacity:.42; animation:floatS 18s var(--ease) infinite alternate;}
+.edge-decor .dots{right:2.8vw; top:16vh; width:70px; opacity:.42;}
+@keyframes floatL{from{transform:translateY(-6px)} to{transform:translateY(6px)}}
+@keyframes floatR{from{transform:scaleX(-1) translateY(4px)} to{transform:scaleX(-1) translateY(-4px)}}
+@keyframes floatS{from{transform:translateY(0)} to{transform:translateY(8px)}}
+
+/* Theme + mobile + motion care */
+[data-theme="light"] .edge-decor svg{opacity:.25; color:color-mix(in oklab, var(--accent-1) 70%, #000 30%);}
+@media (max-width:800px){ .edge-decor .smile{display:none} .edge-decor svg{width:min(26vw,180px); opacity:.22} }
+@media (prefers-reduced-motion:reduce){ .edge-decor svg{animation:none} }
+
+    /* === Theme tokens === */
+    :root{
+      --bg:#0b0d10; --fg:#e6e9ef; --muted:#9aa3b2; --panel:#11161c; --ring:#ffffff1f;
+      --accent-1:#f59e0b; /* sun amber */
+      --accent-2:#fb7185; /* warm rose */
+      --accent-3:#22c55e; /* leaf green */
+      --gap:14px; --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.18);
+      --ease:cubic-bezier(.2,.9,.2,1);
+    }
+    [data-theme="light"]{
+      --bg:#f8fafb; --fg:#1f2937; --muted:#6b7280; --panel:#ffffff; --ring:#00000014; --shadow:0 10px 30px rgba(0,0,0,.08);
+      --accent-1:#f59e0b; --accent-2:#f97384; --accent-3:#16a34a;
+    }
+
+    /* === Base === */
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif}
+    a{color:inherit}
+    .wrap{max-width:1120px;margin:0 auto;padding:24px}
+
+    /* === Decorative background layers: aurora + dot grid === */
+    @keyframes auroraDrift { from{ transform:translate3d(-2%,2%,0) } to{ transform:translate3d(2%,-2%,0) } }
+    body::before{
+      content:""; position:fixed; inset:-15% -10%; z-index:-2; pointer-events:none;
+      background:
+        radial-gradient(60% 50% at 10% 15%, color-mix(in oklab, var(--accent-2) 18%, transparent) 0 55%, #0000 60%),
+        radial-gradient(55% 45% at 90% 25%, color-mix(in oklab, var(--accent-1) 16%, transparent) 0 52%, #0000 60%),
+        radial-gradient(60% 50% at 70% 85%, color-mix(in oklab, var(--accent-3) 18%, transparent) 0 55%, #0000 60%);
+      opacity:.38; animation: auroraDrift 22s var(--ease) infinite alternate;
+    }
+    body::after{
+      content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+      /* tiny dot grid */
+      background:
+        radial-gradient(color-mix(in oklab, var(--fg) 6%, transparent) 1px, transparent 1.5px) 0 0/22px 22px;
+      mix-blend-mode: soft-light; opacity:.12;
+    }
+    body[data-theme="light"]::before{ opacity:.28 }
+    body[data-theme="light"]::after{
+      opacity:.22;
+      background: radial-gradient(#00000014 1px, #0000 1.5px) 0 0/22px 22px;
+      mix-blend-mode: multiply;
+    }
+
+    /* === Header === */
+    header{position:sticky;top:0;backdrop-filter:saturate(1.1) blur(10px);background:color-mix(in oklab, var(--bg) 92%, transparent);z-index:10;border-bottom:1px solid var(--ring)}
+    .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:12px}
+    .mono{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:.5px;color:var(--fg);background:var(--panel);border:1px solid var(--ring);box-shadow:var(--shadow)}
+    h1{font-size:clamp(18px, 2vw + 10px, 28px);margin:0}
+    .sub{color:var(--muted);font-size:14px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;border:1px solid var(--ring);background:var(--panel);text-decoration:none;transition:transform .18s var(--ease), box-shadow .18s var(--ease);color:var(--fg)}
+    .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .btn--primary{border:none;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff}
+
+    .controls{display:flex;align-items:center;gap:10px}
+    .toggle{cursor:pointer;border:1px solid color-mix(in oklab, var(--fg) 22%, transparent);background:var(--panel);padding:8px 12px;border-radius:12px;font-size:13px;color:var(--fg)}
+
+    /* === Hero === */
+    .hero{display:grid;grid-template-columns:1.25fr .75fr;gap:26px;align-items:center;padding:32px 0}
+    .card{border:1px solid var(--ring);background:var(--panel);padding:22px;border-radius:var(--radius);box-shadow:var(--shadow);opacity:0;transform:translateY(16px) scale(.98);transition:opacity .6s var(--ease), transform .6s var(--ease)}
+    .card.revealed{opacity:1;transform:translateY(0) scale(1)}
+    .hero h2{margin:0 0 10px;font-size:clamp(24px, 3vw + 12px, 42px);line-height:1.08;background:linear-gradient(90deg,var(--accent-1),var(--accent-2) 60%,var(--accent-3));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{margin:0;color:var(--muted)}
+
+    /* === Gallery === */
+    .gallery{columns:1;column-gap:var(--gap)}
+    @media (min-width:640px){.gallery{columns:2}}
+    @media (min-width:940px){.gallery{columns:3}}
+    .gallery-controls{column-span:all; display:flex; justify-content:flex-end; gap:10px; margin:4px 0 10px}
+    /* Tidy grid layout */
+    .gallery.tidy{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--gap);column-gap:var(--gap)}
+    .gallery.tidy figure{margin:0;aspect-ratio:3/4;display:flex}
+    .gallery.tidy figure img{width:100%;height:100%;object-fit:cover}
+    .gallery.tidy figcaption{bottom:8px;left:8px}
+    .hidden{display:none !important}
+    figure{break-inside:avoid;margin:0 0 var(--gap);position:relative;border-radius:14px;overflow:hidden;border:1px solid transparent;background:
+        linear-gradient(var(--panel), var(--panel)) padding-box,
+        linear-gradient(135deg,var(--accent-2),var(--accent-1) 45%,var(--accent-3)) border-box;
+      box-shadow:0 8px 24px #00000018;opacity:0;transform:translateY(12px) scale(.995);transition:transform .5s var(--ease), opacity .5s var(--ease)}
+    figure.revealed{opacity:1;transform:translateY(0) scale(1)}
+    figure img{display:block;width:100%;height:auto;transition:scale .25s var(--ease), filter .25s var(--ease);filter:saturate(1) contrast(1)}
+    figure:hover img{scale:1.03;filter:saturate(1.05) contrast(1.05)}
+    figcaption{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.64);color:#fff;border-radius:999px;padding:6px 10px;font-size:12px;backdrop-filter:blur(2px)}
+
+    /* === Packs === */
+    .packs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:34px 0}
+    @media (max-width:1100px){.packs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:750px){.packs-grid{grid-template-columns:1fr}}
+    .pack h3{margin:0 0 6px}
+    .pack .meta{font-size:13px;color:var(--muted);margin:6px 0 12px}
+
+    /* === Info cards === */
+    .about{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:34px 0}
+    @media (max-width:900px){.hero{grid-template-columns:1fr}.about{grid-template-columns:1fr}}
+    .about h3{margin:0 0 6px}
+
+    footer{margin:44px 0 20px;color:var(--muted);font-size:13px;text-align:center}
+
+    /* === Toast === */
+    .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(16px);background:var(--panel);border:1px solid var(--ring);padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .25s var(--ease), transform .25s var(--ease)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* === Lightbox (fits normal photos; tall ones scroll) === */
+    dialog{max-width:min(92vw,1080px);border:none;border-radius:16px;padding:0;background:transparent}
+    dialog::backdrop{background:rgba(0,0,0,.6)}
+    .lightbox{position:relative;display:flex;justify-content:center;align-items:center;max-height:90vh;overflow:auto;background:#000;border-radius:12px}
+    .lightbox img{display:block;max-width:100%;max-height:90vh;width:auto;height:auto;background:#000;border-radius:12px;object-fit:contain}
+    .close{position:absolute;top:10px;right:10px;background:#00000090;color:#fff;border:none;border-radius:999px;width:36px;height:36px;cursor:pointer}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    /* === Motion sensitivity === */
+    @media (prefers-reduced-motion: reduce){
+      .card, figure{transition:none}
+      body::before{animation:none}
+    }
+
+    /* Single-coat background */
+    html{background:transparent !important}
+    body{background:var(--bg) !important}
+    main, section{background:transparent !important}
+
+    /* Controls spanning full width in tidy grid */
+    .gallery.tidy .gallery-controls{grid-column:1/-1;align-items:center}
+    .gallery-controls .btn{min-width:110px;white-space:nowrap}
+    .toggle:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+    .toggle:focus-visible{outline:2px solid color-mix(in oklab, var(--accent-2) 60%, transparent);outline-offset:2px}
+
+    /* higher contrast controls */
+    .gallery-controls .btn{border-color:color-mix(in oklab, var(--fg) 24%, transparent)}
+    .btn[aria-pressed="true"]{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;border:none}
+    .btn:hover{filter:brightness(1.04)}
+
+    /* Mobile & laptop responsive tweaks */
+    .wrap{padding:clamp(16px,4vw,24px)}
+    .btn{font-size:clamp(14px,1.6vw,16px);padding:clamp(10px,2.4vw,12px) clamp(12px,3vw,16px)}
+    .packs-grid{gap:clamp(14px,2.6vw,20px)}
+    .gallery{column-gap:clamp(10px,2.6vw,14px)}
+    .gallery.tidy{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+    @media (max-width:520px){
+      .gallery.tidy{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .gallery-controls{gap:8px}
+      .pack .meta{font-size:12px}
+      .hero h2{font-size:clamp(22px,6vw,36px)}
+    }
+    @media (min-width:1200px){
+      .gallery{columns:4}
+    }
+    header .wrap{padding-left:max(16px, env(safe-area-inset-left));padding-right:max(16px, env(safe-area-inset-right))}
+
+    /* === Botanical Glow extras === */
+    body{background-image:none}
+    .section-heading{display:flex;align-items:center;gap:12px;margin:26px 0 14px;font-family: ui-serif, Georgia, 'Times New Roman', serif;letter-spacing:.2px}
+    .section-heading::before,.section-heading::after{content:"";height:1px;flex:1;background:linear-gradient(90deg, transparent, color-mix(in oklab, var(--fg) 18%, transparent), transparent)}
+    .section-heading .orn{opacity:.55}
+    .chips{display:flex;gap:8px;margin:6px 0 10px}
+    .chip{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid currentColor;background:color-mix(in oklab, currentColor 8%, transparent)}
+    .chip.flowers{color:var(--accent-2)}
+    .chip.leaves{color:var(--accent-3)}
+
+    /* === Contact modal (high-contrast text) === */
+    #contactDlg::backdrop{background:rgba(0,0,0,.6)}
+    #contactDlg .sheet{background:var(--panel);border:1px solid var(--ring);padding:22px;border-radius:16px;box-shadow:var(--shadow);width:min(92vw,560px)}
+    #contactDlg h3{margin:0 0 10px;color:var(--fg)}
+    .email-hero{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 14px;
+      padding:14px 16px;border-radius:999px;border:2px solid color-mix(in oklab, var(--fg) 28%, transparent);
+      background:#ffffff;color:#111;font-weight:800;font-size:clamp(18px,2.2vw,24px)
+    }
+    .email-hero .btn{background:#f0f2f4;color:#111;border:1px solid #c7cdd4}
+    #contactDlg .sub{color:var(--fg)}
+    /* Make action button labels readable in both themes */
+    #contactDlg .contact-actions .btn{color:var(--fg)}
+    body[data-theme="light"] #contactDlg .contact-actions .btn{color:#111}
+    body:not([data-theme="light"]) #contactDlg .contact-actions .btn{color:#fff}
+    .contact-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .contact-actions .btn--primary{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff}
+  </style>
+</head>
+<body>
+  
+  <header>
+    <div class="wrap bar">
+      <div class="brand">
+        <div class="mono" aria-hidden="true">HR</div>
+        <div>
+          <h1>Hom Rast</h1>
+          <div class="sub">Everyday beauty, captured.</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="toggle" id="themeToggle" aria-label="Toggle theme">Toggle theme</button>
+        <a class="btn btn--primary" href="#packs">See Packs</a>
+        <button class="btn" id="contactOpen">Contact</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="card reveal-on-scroll">
+        <h2>Hi, I’m <span style="white-space:nowrap">Hom Rast</span>.</h2>
+        <p>I photograph the beautiful moments I see on walks, in cafés, and around the city—light, texture, and quiet stories. Below is a small selection. For licensing or packs, please get in touch.</p>
+      </div>
+      <div class="card reveal-on-scroll">
+        <h3 style="margin:0 0 8px">Contact & Availability</h3>
+        <p>Based in <em>losangeles,United States</em>. Available for photo packs and limited commissions.<br> Email: <strong>homrastir@gmail.com</strong></p>
+      </div>
+    </section>
+
+    <h2 class="section-heading"><span class="orn">❦</span> Gallery</h2>
+    <section id="gallery" aria-label="Gallery" class="gallery">
+      <div class="gallery-controls">
+        <div style="margin-right:auto;display:flex;gap:8px">
+          <button class="btn" id="tidyBtn" aria-pressed="true" title="Neat grid (cropped)">Tidy grid</button>
+          <button class="btn" id="fullBtn" aria-pressed="false" title="Original aspect (masonry)">Show full</button>
+        </div>
+        <button class="btn" id="showAll">Show All</button>
+      </div>
+
+      <figure class="reveal-on-scroll" data-pack="flowers">
+        <img loading="lazy" src="images/flower1.jpg" alt="Flower 1" sizes="(max-width: 640px) 92vw, (max-width: 940px) 44vw, 30vw" />
+        <figcaption>Flower 1</figcaption>
+      </figure>
+      <figure class="reveal-on-scroll" data-pack="flowers">
+        <img loading="lazy" src="images/flower2.jpg" alt="Flower 2" sizes="(max-width: 640px) 92vw, (max-width: 940px) 44vw, 30vw" />
+        <figcaption>Flower 2</figcaption>
+      </figure>
+      <figure class="reveal-on-scroll" data-pack="flowers">
+        <img loading="lazy" src="images/flower3.jpg" alt="Flower 3" sizes="(max-width: 640px) 92vw, (max-width: 940px) 44vw, 30vw" />
+        <figcaption>Flower 3</figcaption>
+      </figure>
+      <figure class="reveal-on-scroll" data-pack="flowers">
+        <img loading="lazy" src="images/flower4.jpg" alt="Flower 4" sizes="(max-width: 640px) 92vw, (max-width: 940px) 44vw, 30vw" />
+        <figcaption>Flower 4</figcaption>
+      </figure>
+      <!-- Replace your single leaves <figure> ... </figure> with these four: -->
+      <figure class="reveal-on-scroll" data-pack="leaves">
+        <img loading="lazy" src="images/leaf1.jpg" alt="Leaf 1"
+            sizes="(max-width: 640px) 92vw, (max-width: 940px) 44vw, 30vw" />
+        <figcaption>Leaf 1</figcaption>
+      </figure>
+
+      <figure class="reveal-on-scroll" data-pack="leaves">
+        <img loading="lazy" src="images/leaf2.jpg" alt="Leaf 2"
+            sizes="(max-width: 640px) 92vw, (max-width: 940px) 44vw, 30vw" />
+        <figcaption>Leaf 2</figcaption>
+      </figure>
+
+      <figure class="reveal-on-scroll" data-pack="leaves">
+        <img loading="lazy" src="images/leaf3.jpg" alt="Leaf 3"
+            sizes="(max-width: 640px) 92vw, (max-width: 940px) 44vw, 30vw" />
+        <figcaption>Leaf 3</figcaption>
+      </figure>
+
+      <figure class="reveal-on-scroll" data-pack="leaves">
+        <img loading="lazy" src="images/leaf4.jpg" alt="Leaf 4"
+            sizes="(max-width: 640px) 92vw, (max-width: 940px) 44vw, 30vw" />
+        <figcaption>Leaf 4</figcaption>
+      </figure>
+
+    </section>
+
+    <h2 class="section-heading"><span class="orn">❦</span> Collections</h2>
+    <section id="packs" class="packs-grid">
+      <!-- Flowers pack -->
+      <article class="card pack reveal-on-scroll">
+        <h3>Flowers</h3>
+        <div class="chips"><span class="chip flowers">Flowers</span></div>
+        <div class="meta">≈10 photos • 4K JPG/TIFF • warm & floral</div>
+        <p>Golden hours, soft dusks, and close-up blooms for warm, uplifting designs.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn--primary" href="#gallery" data-preview data-pack="flowers">Preview</a>
+          <a class="btn" data-external target="_blank" rel="noopener" href="https://creativemarket.com/yourshop/flowers">Buy on Creative Market</a>
+          <button class="btn copy-link" data-url="https://creativemarket.com/yourshop/flowers">Copy Link</button>
+        </div>
+      </article>
+
+      <!-- Leaves pack -->
+      <article class="card pack reveal-on-scroll">
+        <h3>Leaves</h3>
+        <div class="chips"><span class="chip leaves">Leaves</span></div>
+        <div class="meta">≈10 photos • 4K JPG • natural textures</div>
+        <p>Shadows, veins, and patterns—greenery for branding and editorial.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn--primary" href="#gallery" data-preview data-pack="leaves">Preview</a>
+          <a class="btn" data-external target="_blank" rel="noopener" href="https://creativemarket.com/yourshop/leaves">Buy on Creative Market</a>
+          <button class="btn copy-link" data-url="https://creativemarket.com/yourshop/leaves">Copy Link</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="about">
+      <div class="card reveal-on-scroll">
+        <h3>Contact</h3>
+        <p>Questions or licensing? Email <strong>homrastir@gmail.com</strong>.</p>
+      </div>
+      <div class="card reveal-on-scroll">
+        <h3>Notes</h3>
+        <p>No Instagram. Portfolio is lightweight and fast. External marketplace links may be blocked in preview—use <em>Copy Link</em> or open after deployment.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">© <span id="y"></span> Hom Rast</div>
+  </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="dlg" aria-label="Expanded image">
+    <div class="lightbox">
+      <button class="close" aria-label="Close" onclick="dlg.close()">✕</button>
+      <img id="dlgImg" alt="" />
+      <p class="sr-only" id="dlgAlt"></p>
+    </div>
+  </dialog>
+
+  <!-- Contact dialog -->
+  <dialog id="contactDlg" class="contact" aria-label="Contact Hom Rast">
+    <div class="sheet">
+      <h3>Contact Hom Rast</h3>
+      <div class="email-hero" role="button" tabindex="0" id="emailHero" title="Click to copy">
+        <span id="contactEmail">homrastir@gmail.com</span>
+        <button class="btn" id="copyEmailBtn">Copy</button>
+      </div>
+      <p class="sub" style="margin:6px 0 12px">Choose how you’d like to reach out:</p>
+      <div class="contact-actions">
+        <a class="btn btn--primary" data-external target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&to=homrastir@gmail.com&su=Inquiry%20from%20portfolio">Open Gmail</a>
+        <a class="btn" href="mailto:homrastir@gmail.com?subject=Inquiry%20from%20portfolio">Open email app</a>
+        <button class="btn" id="copyEmailBtn2">Copy email</button>
+        <button class="btn" onclick="document.getElementById('contactDlg').close()">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Lightbox
+    const dlg = document.getElementById('dlg');
+    const dlgImg = document.getElementById('dlgImg');
+    document.querySelectorAll('.gallery img').forEach(img => {
+      img.addEventListener('click', () => {
+        dlgImg.src = img.src; dlgImg.alt = img.alt; dlg.showModal();
+      });
+    });
+    dlg.addEventListener('click', (e) => {
+      const rect = dlg.querySelector('.lightbox img').getBoundingClientRect();
+      const inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+      if (!inside) dlg.close();
+    });
+
+    // Scroll reveal animations
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('revealed');
+          io.unobserve(entry.target);
+        }
+      })
+    },{threshold:0.15});
+    document.querySelectorAll('.reveal-on-scroll, .gallery figure').forEach(el=>io.observe(el));
+
+    // Theme toggle with persistence
+    const body = document.body;
+    const saved = localStorage.getItem('theme');
+    const initial = saved || 'light';
+    body.setAttribute('data-theme', initial);
+    if(!saved) localStorage.setItem('theme','light');
+    document.getElementById('themeToggle').addEventListener('click', ()=>{
+      const next = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      body.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // Toast helper
+    function toast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(()=> t.classList.remove('show'), 2200);
+    }
+
+    // External link handler (works around preview sandboxes)
+    document.querySelectorAll('a[data-external]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const url = a.href;
+        const win = window.open(url, '_blank', 'noopener');
+        if(!win){
+          navigator.clipboard?.writeText(url)
+            .then(()=> toast('Link copied. Paste it in a new tab.'))
+            .catch(()=> toast('Copy failed. Right-click to copy link.'));
+        }
+      });
+    });
+
+    // Explicit copy-link buttons
+    document.querySelectorAll('.copy-link').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const url = btn.getAttribute('data-url');
+        navigator.clipboard?.writeText(url)
+          .then(()=> toast('Link copied!'))
+          .catch(()=> toast(url));
+      });
+    });
+
+    // Pack preview filtering
+    function filterPack(name){
+      const figs = document.querySelectorAll('.gallery figure');
+      const anyTagged = Array.from(figs).some(f=> !!f.dataset.pack);
+      if(!name || !anyTagged){
+        figs.forEach(f=> f.classList.remove('hidden'));
+        toast(!name ? 'Showing all' : 'Preview: showing all (tag images to filter)');
+      } else {
+        let found = false;
+        figs.forEach(f=>{
+          const ok = f.dataset.pack === name;
+          f.classList.toggle('hidden', !ok);
+          if(ok) found = true;
+        });
+        toast(found ? `Showing ${name} pack` : `No samples yet for ${name}`);
+      }
+      document.getElementById('gallery').scrollIntoView({behavior:'smooth'});
+    }
+    document.querySelectorAll('[data-preview]').forEach(btn=>{
+      btn.addEventListener('click', e=>{ e.preventDefault(); filterPack(btn.dataset.pack); });
+    });
+    document.getElementById('showAll')?.addEventListener('click', ()=> filterPack(null));
+
+    // Gallery layout toggle
+    const galleryEl = document.getElementById('gallery');
+    function setLayout(mode){
+      galleryEl.classList.toggle('tidy', mode === 'tidy');
+      localStorage.setItem('galleryLayout', mode);
+      document.getElementById('tidyBtn')?.setAttribute('aria-pressed', mode==='tidy');
+      document.getElementById('fullBtn')?.setAttribute('aria-pressed', mode==='full');
+    }
+    setLayout(localStorage.getItem('galleryLayout') || 'tidy');
+    document.getElementById('tidyBtn')?.addEventListener('click', ()=> setLayout('tidy'));
+    document.getElementById('fullBtn')?.addEventListener('click', ()=> setLayout('full'));
+
+    // Contact modal
+    const contactDlg = document.getElementById('contactDlg');
+    document.getElementById('contactOpen')?.addEventListener('click', ()=> contactDlg.showModal());
+    contactDlg?.addEventListener('click', (e)=>{
+      const box = contactDlg.querySelector('.sheet').getBoundingClientRect();
+      const inside = e.clientX >= box.left && e.clientX <= box.right && e.clientY >= box.top && e.clientY <= box.bottom;
+      if(!inside) contactDlg.close();
+    });
+    function copyEmail(){
+      const email = 'homrastir@gmail.com';
+      navigator.clipboard?.writeText(email)
+        .then(()=> toast('Email copied!'))
+        .catch(()=> toast(email));
+    }
+    document.getElementById('emailHero')?.addEventListener('click', copyEmail);
+    document.getElementById('copyEmailBtn')?.addEventListener('click', (e)=>{ e.stopPropagation(); copyEmail(); });
+    document.getElementById('copyEmailBtn2')?.addEventListener('click', copyEmail);
+  </script>
+</body>
+</html>
